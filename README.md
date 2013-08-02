@@ -2,11 +2,12 @@ PY4FRC
 ======
 
 Python code to generate data about FRC events
+You put this in your :/Python27/Lib/site-packages/ folder and import it
 
 Single FRC module for Python 2.7
 Relies on Beautiful Soup 3 and Numpy (as well as regex and urllib2)
 
-There's a few useful functions, all of which takes the 2013 codes, 
+There's a few useful functions, all of which takes the 2013 event codes, 
 for example "micmp" for the Michigan State Championship and "casj" for the Silicon Valley Regional.
 You can find a full list of codes at frclinks.com (not my site).
 
