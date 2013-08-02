@@ -1,4 +1,4 @@
-PY4FRC
+py4frc
 ======
 
 Python code to generate data about FRC events
