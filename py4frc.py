@@ -218,7 +218,8 @@ def calcOPR(oprMatrix, scores):
 
 def getRegOpr(code):
     code = getCode(code)
-    OPR = calcOPR(getOprMatrix(code)[0],getOprMatrix(code)[1])
+    oprMatrix, scores = getOprMatrix(code)
+    OPR = calcOPR(oprMatrix, scores)
     if OPR == []:
         return OPR
     for i in range(len(OPR)):
