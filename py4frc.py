@@ -12,7 +12,7 @@ from re import sub
 from re import compile
 from numpy.linalg import solve
 from numpy.linalg import cholesky
-from numpy import transpose
+import numpy
 
 def getCode(phrase):
     codes =['txsa','orpo','nhma','lake','mibed','inwl','mabo','njbrg','ohcl',
@@ -43,7 +43,7 @@ def getCode(phrase):
     'chesapeake':'mdba','newyorkcity':'nyny','cvr':'cama','westmichigan':'miwmi',
     'colorado':'code','northcarolina':'ncre','cwr':'wase2','westerncanadian':'abca',
     'connecticut':'ctha','northernlights':'mndu2','flr':'nyro','wisconsin':'wimi',
-    'crossroads':'inth','oklahoma':'okok','kcr':'mokc','wpi':'mawo',
+    'crossroads':'inth','oklahoma':'okok','kcr':'mokc','kc':'mokc','wpi':'mawo',
     'dallas':'txda','orlando':'flor','gtre':'onto','oregon':'orpo',
     'detroit':'midet','palmetto':'scmb','gtrw':'onto2','granitestate':'nhma',
     'montreal':'qcmo','peachtree':'gadu','lvr':'nvlv','bae':'nhma',
@@ -213,7 +213,7 @@ def getOprMatrix(code):
 def calcOPR(oprMatrix, scores):
     L = cholesky(oprMatrix)
     y = solve(L, scores)
-    OPR = solve(transpose(L), y)
+    OPR = solve(L.T.conj(), y)
     return OPR
 
 def getRegOpr(code):
@@ -232,21 +232,19 @@ def getAllOprs(code):
     autoScores = []
     teleScores = []
     climbScores = []
+    teamlist = getTeamStandings(code)
     for teamNum, team in enumerate(getStandings(code)):
         teamDict[team[1]] = {"autoScore":team[3], "teleScore":team[5], "climbScore":team[4]}
-        autoScores.append(teamDict[team[1]]["autoScore"])
-        teleScores.append(teamDict[team[1]]["teleScore"])
-        climbScores.append(teamDict[team[1]]["climbScore"])
+
+    for team in teamlist:
+        autoScores.append(teamDict[team]["autoScore"])
+        teleScores.append(teamDict[team]["teleScore"])
+        climbScores.append(teamDict[team]["climbScore"])
+
     totOPR = calcOPR(oprMatrix, totalScores)
     autoOPR = calcOPR(oprMatrix, autoScores)
     teleOPR = calcOPR(oprMatrix, teleScores)
     climbOPR = calcOPR(oprMatrix, climbScores)
-
-    for value in range(len(totOPR)):
-        x = totOPR[value]/(autoOPR[value]+teleOPR[value]+climbOPR[value])
-        autoOPR[value] = x*autoOPR[value]
-        teleOPR[value] = x*teleOPR[value]
-        climbOPR[value] = x*climbOPR[value]
 
     oprDict={}
     for teamNum, team in enumerate(getTeamStandings(code)):
